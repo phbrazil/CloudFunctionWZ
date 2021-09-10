@@ -1,0 +1,19 @@
+{
+  "name": "warzone",
+  "version": "1.0.0",
+  "description": "api backend warzone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "vue init"
+  },
+  "author": "paulo bezerra",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "call-of-duty-api": "^2.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12"
+  }
+}
