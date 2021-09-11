@@ -15,8 +15,6 @@ const port = 3000
 
 app.post('/', function (req, res) {
 
-    console.log(req.body)
-
     //node index.js
     //killall -9 node
 
@@ -59,8 +57,8 @@ app.post('/', function (req, res) {
             let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
             var SSOToken = JSON.parse(JSON.stringify('{' +
-                api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ':')
-                    .replaceAll(';', ',') + '}'));
+                api.apiAxios.defaults.headers.common.cookie.replace(/=/g, ':')
+                    .replace(';', ',') + '}'));
 
             const responseBody = {
                 status: 200,
