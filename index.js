@@ -31,20 +31,12 @@ app.post('/', function (req, res) {
 
 
         if (req.body.SSOToken.trim()) {
-            
-            let status;
 
-            api.loginWithSSO(req.body.SSOToken).then(start).catch(status);
-
-            console.log(status)
+            api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
 
         } else {
 
-            let status;
-
-            api.login(req.body.email, req.body.password, captchaAPIKey).then(start).catch(status);
-
-            console.log(status)
+            api.login(req.body.email, req.body.password, captchaAPIKey).then(start).catch(console.log);
 
         }
 
@@ -65,7 +57,9 @@ app.post('/', function (req, res) {
 
             let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
-            var SSOToken = '{' + api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ': ').replaceAll(';', ', ') + '}';
+            var SSOToken = JSON.parse(JSON.stringify('{' + 
+            api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ': ')
+            .replaceAll(';', ', ') + '}'));
 
             const responseBody = {
                 status: 200,
