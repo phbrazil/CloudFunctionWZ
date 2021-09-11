@@ -15,25 +15,36 @@ const port = 3000
 
 app.post('/', function (req, res) {
 
+    console.log(req.body)
+
     //node index.js
     //killall -9 node
 
     const captchaAPIKey = 'e634119877d1596502fbdb9c13301f0d'
 
 
-     const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
+    const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
 
     //const api = require('call-of-duty-api')();
 
     try {
 
-        if(req.body.SSOToken!='' || req.body.SSOToken != null){
 
-            api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
+        if (req.body.SSOToken.trim()) {
+            
+            let status;
 
-        }else{
+            api.loginWithSSO(req.body.SSOToken).then(start).catch(status);
 
-            api.login(req.body.email, req.body.password, captchaAPIKey).then(start).catch(console.log);
+            console.log(status)
+
+        } else {
+
+            let status;
+
+            api.login(req.body.email, req.body.password, captchaAPIKey).then(start).catch(status);
+
+            console.log(status)
 
         }
 
@@ -54,7 +65,7 @@ app.post('/', function (req, res) {
 
             let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
-            var SSOToken = '{'+api.apiAxios.defaults.headers.common.cookie.replace(/=/g, ': ').replace(';',', ')+'}';
+            var SSOToken = '{' + api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ': ').replaceAll(';', ', ') + '}';
 
             const responseBody = {
                 status: 200,
