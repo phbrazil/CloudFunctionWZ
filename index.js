@@ -43,7 +43,8 @@ app.post('/', function (req, res) {
 
     } catch (Error) {
 
-        console.log('Error: ', Error)
+        res.status(401).send(Error);
+
         //Handle Exception
     }
 
@@ -57,9 +58,9 @@ app.post('/', function (req, res) {
 
             let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
-            var SSOToken = JSON.parse(JSON.stringify('{' + 
-            api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ':')
-            .replaceAll(';', ',') + '}'));
+            var SSOToken = JSON.parse(JSON.stringify('{' +
+                api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ':')
+                    .replaceAll(';', ',') + '}'));
 
             const responseBody = {
                 status: 200,
@@ -73,7 +74,8 @@ app.post('/', function (req, res) {
 
         } catch (Error) {
 
-            console.log('Error: ', Error)
+            res.status(401).send(Error);
+
             //Handle Exception
         }
     }
