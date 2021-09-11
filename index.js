@@ -58,8 +58,8 @@ app.post('/', function (req, res) {
             let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
             var SSOToken = JSON.parse(JSON.stringify('{' + 
-            api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ': ')
-            .replaceAll(';', ', ') + '}'));
+            api.apiAxios.defaults.headers.common.cookie.replaceAll(/=/g, ':')
+            .replaceAll(';', ',') + '}'));
 
             const responseBody = {
                 status: 200,
