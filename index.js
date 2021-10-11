@@ -21,7 +21,7 @@ app.post('/', function (req, res) {
     const captchaAPIKey = 'e634119877d1596502fbdb9c13301f0d'
 
 
-    const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
+    const api = require('call-of-duty-api')({ platform: req.body.platform});
 
     //const api = require('call-of-duty-api')();
 
@@ -56,6 +56,10 @@ app.post('/', function (req, res) {
 
             let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
+            let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
+
+            //let MWAnalysis = await api.MWAnalysis(req.body.gamerTag, req.body.platform);
+
             var SSOToken = api.apiAxios.defaults.headers.common.cookie;
 
             const responseBody = {
@@ -63,6 +67,8 @@ app.post('/', function (req, res) {
                 gamerTag: req.body.gamerTag,
                 response: statsWarzone,
                 recentMatches: recentMatches,
+                lastMatchDetail: lastMatchDetail,
+                //MWAnalysis: MWAnalysis,
                 SSOToken: SSOToken
             }
 
