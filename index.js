@@ -15,8 +15,8 @@ const port = 3000
 
 app.post('/', function (req, res) {
 
-    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-    req.socket.remoteAddress;
+    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
+        req.socket.remoteAddress;
 
     console.log('Ip Address ', ip)
 
@@ -33,18 +33,7 @@ app.post('/', function (req, res) {
 
     try {
 
-
-        if (req.body.SSOToken.trim()) {
-
-            api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
-
-        } else {
-
-            console.log('getting new SSO')
-
-            api.login(req.body.email, req.body.password, captchaAPIKey).then(start).catch(console.log);
-
-        }
+        api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
 
 
     } catch (Error) {
