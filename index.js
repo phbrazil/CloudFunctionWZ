@@ -15,13 +15,19 @@ const port = 3000
 
 app.post('/', function (req, res) {
 
+    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+    req.socket.remoteAddress;
+
+    console.log('Ip Address ', ip)
+
     //node index.js
     //killall -9 node
 
     const captchaAPIKey = 'e634119877d1596502fbdb9c13301f0d'
 
 
-    const api = require('call-of-duty-api')({ platform: req.body.platform});
+    //const api = require('call-of-duty-api')({ platform: req.body.platform });
+    const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
 
     //const api = require('call-of-duty-api')();
 
@@ -33,6 +39,8 @@ app.post('/', function (req, res) {
             api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
 
         } else {
+
+            console.log('getting new SSO')
 
             api.login(req.body.email, req.body.password, captchaAPIKey).then(start).catch(console.log);
 
