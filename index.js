@@ -57,6 +57,8 @@ app.post('/', function (req, res) {
 
             //let MWAnalysis = await api.MWAnalysis(req.body.gamerTag, req.body.platform);
 
+            let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
+
             var SSOToken = api.apiAxios.defaults.headers.common.cookie;
 
             const responseBody = {
@@ -65,6 +67,7 @@ app.post('/', function (req, res) {
                 response: statsWarzone,
                 recentMatches: recentMatches,
                 lastMatchDetail: lastMatchDetail,
+                MWweeklystats: MWweeklystats,
                 //MWAnalysis: MWAnalysis,
                 SSOToken: SSOToken
             }
