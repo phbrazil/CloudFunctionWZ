@@ -40,37 +40,12 @@ app.post('/', function (req, res) {
 
             console.log('GETTING LOGIN INFO')
 
-            //api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
-            api.loginWithSSO(req.body.SSOToken).then(status => {
-
-                console.log(status)
-
-                var SSOToken = api.apiAxios.defaults.headers.common.cookie;
-
-                api.MWBattleData(req.body.gamerTag, req.body.platform).then(output => {
-
-                    console.log(output)
-
-                    const responseBody = {
-                        status: 200,
-                        gamerTag: req.body.gamerTag,
-                        response: output,
-                        //recentMatches: recentMatches,
-                        //lastMatchDetail: lastMatchDetail,
-                        //MWweeklystats: MWweeklystats,
-                        //MWAnalysis: MWAnalysis,
-                        SSOToken: SSOToken
-                    }
-
-                    res.status(200).send(responseBody);
-
-                })
-
-            }).catch(console.log);
+            api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
+            
 
         } catch (Error) {
 
-            console.log('Error: ', Error)
+            console.log('Login Error: ', util.inspect(Error, { showHidden: true, depth: 2 }));
 
             res.status(401).send(Error);
 
@@ -122,7 +97,7 @@ app.post('/', function (req, res) {
 
         } catch (Error) {
 
-            console.log('Error: ', Error)
+            console.log('Stats Error: ', util.inspect(Error, { showHidden: true, depth: 2 }));
 
             res.status(500).send(Error);
 
