@@ -23,14 +23,7 @@ app.post('/', function (req, res) {
     //killall -9 node
 
     //const api = require('call-of-duty-api')({ platform: req.body.platform });
-    const api = require('call-of-duty-api')({
-        platform: req.body.platform,
-        debug: 1,
-        ratelimit: {
-            maxRequests: 2,
-            perMilliseconds: 1000, maxRPS: 2
-        }
-    });
+    const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
 
     login();
 
@@ -51,44 +44,38 @@ app.post('/', function (req, res) {
     }
 
 
-    function start() {
+    async function start() {
 
 
         try {
 
             console.log('GETTING STATS INFO')
 
-            var SSOToken = api.apiAxios.defaults.headers.common.cookie;
-
-            
-
             //STATS WARZONE
-            api.MWBattleData(req.body.gamerTag, req.body.platform).then((output =>{
+            var statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
 
-                const responseBody = {
-                    status: 200,
-                    gamerTag: req.body.gamerTag,
-                    response: output,
-                    //recentMatches: recentMatches,
-                    //lastMatchDetail: lastMatchDetail,
-                    //MWweeklystats: MWweeklystats,
-                    //MWAnalysis: MWAnalysis,
-                    SSOToken: SSOToken
-                }
+            let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
-                res.status(200).send(responseBody);
-
-            }));
-
-            //let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
-
-            //let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
+            let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
 
             //let MWAnalysis = await api.MWAnalysis(req.body.gamerTag, req.body.platform);
 
-            //let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
-            
+            let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
 
+            var SSOToken = api.apiAxios.defaults.headers.common.cookie;
+
+            const responseBody = {
+                status: 200,
+                gamerTag: req.body.gamerTag,
+                response: statsWarzone,
+                recentMatches: recentMatches,
+                lastMatchDetail: lastMatchDetail,
+                MWweeklystats: MWweeklystats,
+                //MWAnalysis: MWAnalysis,
+                SSOToken: SSOToken
+            }
+
+            res.status(200).send(responseBody);
 
         } catch (Error) {
 
