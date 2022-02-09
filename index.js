@@ -49,7 +49,7 @@ app.post('/', function (req, res) {
 
                 if (status == '200 - Logged in with SSO.') {
 
-                    API.MWwz(req.body.gamerTag, req.body.platform).then(response => {
+                    API.MWBattleData(req.body.gamerTag, req.body.platform).then(response => {
                         res.status(200).send(response);
                     })
                 }
