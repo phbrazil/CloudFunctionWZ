@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin: ['https://www.spartacla.com.br', 'http://localhost:3000']
+    origin: '*'
 }));
 
 app.post('/', function (req, res) {
@@ -44,6 +44,8 @@ app.post('/', function (req, res) {
 
         } catch (Error) {
 
+            console.log('Error: ',Error)
+
             res.status(401).send(Error);
 
             //Handle Exception
@@ -59,8 +61,6 @@ app.post('/', function (req, res) {
             console.log('GETTING STATS INFO')
 
             var SSOToken = api.apiAxios.defaults.headers.common.cookie;
-
-            
 
             //STATS WARZONE
             api.MWBattleData(req.body.gamerTag, req.body.platform).then((output =>{
@@ -92,7 +92,9 @@ app.post('/', function (req, res) {
 
         } catch (Error) {
 
-            res.status(401).send(Error);
+            console.log('Error: ',Error)
+
+            res.status(500).send(Error);
 
             //Handle Exception
         }
