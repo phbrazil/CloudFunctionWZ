@@ -26,25 +26,34 @@ app.post('/', function (req, res) {
     //const api = require('call-of-duty-api')({ platform: req.body.platform });
     const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
 
-    try {
+    login();
 
-        api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
+    async function login() {
 
+        try {
 
-    } catch (Error) {
+            console.log('GETTING LOGIN INFO')
 
-        res.status(401).send(Error);
+            await api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
 
-        //Handle Exception
+        } catch (Error) {
+
+            res.status(401).send(Error);
+
+            //Handle Exception
+        }
     }
 
 
     async function start() {
 
+
         try {
 
+            console.log('GETTING STATS INFO')
+
             //STATS WARZONE
-            var statsWarzone = await api.MWBattleData(req.body.gamerTag);
+            var statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
 
             let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
