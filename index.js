@@ -22,7 +22,7 @@ app.post('/', function (req, res) {
     //node index.js
     //killall -9 node
 
-    const api = require('call-of-duty-api')({ platform: req.body.platform });
+    const api = require('call-of-duty-api')();
 
     /*
     const api = require('call-of-duty-api')({
@@ -35,9 +35,38 @@ app.post('/', function (req, res) {
     });
     */
 
-    login();
+    // login();
 
-    async function login() {
+    const run = async () => {
+
+        const API = require('call-of-duty-api')();
+
+        try {
+
+            API.loginWithSSO(req.body.SSOToken).then(status => {
+
+                console.log('STATUS: ', status)
+
+                try {
+                    API.MWwz(req.body.gamerTag, req.body.platform).then(response => {
+                        res.status(200).send(response);
+                    })
+                } catch (error) {
+                    console.log("Error 2!");
+                }
+
+            }).catch(console.log);
+
+        } catch (error) {
+            console.log("Error 2!");
+        }
+
+    }
+
+    module.exports.run = run();
+
+
+    /*async function login() {
 
         try {
 
@@ -65,7 +94,7 @@ app.post('/', function (req, res) {
             console.log('GETTING STATS INFO')
 
             //STATS WARZONE
-            //let statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
+            let statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
 
             //let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
@@ -80,7 +109,7 @@ app.post('/', function (req, res) {
             const responseBody = {
                 status: 200,
                 gamerTag: req.body.gamerTag,
-                //response: statsWarzone,
+                response: statsWarzone,
                 //recentMatches: recentMatches,
                 //lastMatchDetail: lastMatchDetail,
                 //MWweeklystats: MWweeklystats,
@@ -100,6 +129,7 @@ app.post('/', function (req, res) {
             //Handle Exception
         }
     }
+    */
 });
 
 app.listen(PORT, () => {
