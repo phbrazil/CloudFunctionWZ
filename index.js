@@ -23,7 +23,7 @@ app.post('/', function (req, res) {
     //killall -9 node
 
     const api = require('call-of-duty-api')({ platform: req.body.platform });
-    
+
     /*
     const api = require('call-of-duty-api')({
         platform: req.body.platform,
@@ -65,25 +65,25 @@ app.post('/', function (req, res) {
             console.log('GETTING STATS INFO')
 
             //STATS WARZONE
-            let statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
+            //let statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
 
-            let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
+            //let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
-            let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
+            //let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
 
             //let MWAnalysis = await api.MWAnalysis(req.body.gamerTag, req.body.platform);
 
-            let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
+            //let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
 
             var SSOToken = api.apiAxios.defaults.headers.common.cookie;
 
             const responseBody = {
                 status: 200,
                 gamerTag: req.body.gamerTag,
-                response: statsWarzone,
-                recentMatches: recentMatches,
-                lastMatchDetail: lastMatchDetail,
-                MWweeklystats: MWweeklystats,
+                //response: statsWarzone,
+                //recentMatches: recentMatches,
+                //lastMatchDetail: lastMatchDetail,
+                //MWweeklystats: MWweeklystats,
                 //MWAnalysis: MWAnalysis,
                 SSOToken: SSOToken
             }
