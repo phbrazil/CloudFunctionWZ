@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors');
+const PORT = process.env.PORT || 5000
 
 
 const app = express()
@@ -10,8 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: ['https://www.spartacla.com.br', 'http://localhost:3000']
 }));
-
-const port = 3000
 
 app.post('/', function (req, res) {
 
@@ -87,7 +86,7 @@ app.post('/', function (req, res) {
     }
 });
 
-app.listen(port, () => {
-    console.log(`app listening at http://localhost:${port}`)
+app.listen(PORT, () => {
+    console.log(`app listening on ${PORT}`)
 });
 
