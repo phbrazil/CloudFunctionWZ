@@ -22,7 +22,9 @@ app.post('/', function (req, res) {
     //node index.js
     //killall -9 node
 
-    //const api = require('call-of-duty-api')({ platform: req.body.platform });
+    const api = require('call-of-duty-api')({ platform: req.body.platform });
+    
+    /*
     const api = require('call-of-duty-api')({
         platform: req.body.platform,
         debug: 1,
@@ -31,6 +33,7 @@ app.post('/', function (req, res) {
             perMilliseconds: 1000, maxRPS: 2
         }
     });
+    */
 
     login();
 
