@@ -23,13 +23,8 @@ app.post('/', function (req, res) {
     //node index.js
     //killall -9 node
 
-    const captchaAPIKey = 'e634119877d1596502fbdb9c13301f0d'
-
-
     //const api = require('call-of-duty-api')({ platform: req.body.platform });
     const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
-
-    //const api = require('call-of-duty-api')();
 
     try {
 
