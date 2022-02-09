@@ -34,13 +34,13 @@ app.post('/', function (req, res) {
 
     login();
 
-    async function login() {
+    function login() {
 
         try {
 
             console.log('GETTING LOGIN INFO')
 
-            await api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
+            api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
 
         } catch (Error) {
 
