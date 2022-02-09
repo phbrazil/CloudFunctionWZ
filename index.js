@@ -78,6 +78,8 @@ app.post('/', function (req, res) {
 
                 res.status(200).send(responseBody);
 
+            }, err =>{
+                console.log('ERROR: ', err)
             }));
 
             //let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
