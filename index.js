@@ -47,18 +47,21 @@ app.post('/', function (req, res) {
 
                 console.log('STATUS: ', status)
 
-                try {
+                if (status == '200 - Logged in with SSO.') {
+
                     API.MWwz(req.body.gamerTag, req.body.platform).then(response => {
                         res.status(200).send(response);
                     })
-                } catch (error) {
-                    console.log("Error 2!");
                 }
 
-            }).catch(console.log);
+            }).catch(err => {
+
+                res.status(500).send(err);
+
+            });
 
         } catch (error) {
-            console.log("Error 2!");
+            console.log("Error: ", error);
         }
 
     }
