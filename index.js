@@ -23,10 +23,10 @@ app.post('/', function (req, res) {
 
     proxy.web(req, res,
         {
-            target: 'https://'+ip,
-            changeOrigin: true,
-            followRedirects: true,
-            secure: true
+            target: `https://${ip}`,
+            //changeOrigin: true,
+            //followRedirects: true,
+            //secure: true
         });
 
     console.log('Ip Address ', ip)
