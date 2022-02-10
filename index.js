@@ -1,6 +1,9 @@
 const express = require('express')
 const cors = require('cors');
 const PORT = process.env.PORT || 5000
+var http = require('http');
+var httpProxy = require('http-proxy');
+var proxy = httpProxy.createProxyServer({});
 
 
 const app = express()
@@ -13,6 +16,7 @@ app.use(cors({
 }));
 
 app.post('/', function (req, res) {
+    proxy.web(req, res, { target: 'https://www.google.com' });
 
     var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
         req.socket.remoteAddress;
