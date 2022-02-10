@@ -16,16 +16,18 @@ app.use(cors({
 }));
 
 app.post('/', function (req, res) {
+
+
+    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
+        req.socket.remoteAddress;
+
     proxy.web(req, res,
         {
-            target: 'https://169.57.157.148',
+            target: 'https://'+ip,
             changeOrigin: true,
             followRedirects: true,
             secure: true
         });
-
-    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
-        req.socket.remoteAddress;
 
     console.log('Ip Address ', ip)
 
