@@ -5,85 +5,43 @@ var http = require('http');
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
 
-
 const app = express()
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin: '*'
+    origin: ['https://www.spartacla.com.br', 'http://localhost:3000']
 }));
 
+//http.createServer(function(req, res) {
 app.post('/', function (req, res) {
 
+    console.log(req, '++++')
+
+    proxy.web(req, res, { target: 'http://143.208.200.26' });
+
+    // proxy.web(req, res, { target: `https://${proxy}` });
 
     var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
         req.socket.remoteAddress;
 
-    proxy.web(req, res,
-        {
-            target: `https://${ip}`,
-            //changeOrigin: true,
-            //followRedirects: true,
-            //secure: true
-        });
+    console.log('Ip Address ', ip)
+
+    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
+        req.socket.remoteAddress;
 
     console.log('Ip Address ', ip)
 
     //node index.js
     //killall -9 node
 
-    const api = require('call-of-duty-api')();
+    //const api = require('call-of-duty-api')({ platform: req.body.platform });
+    const api = require('call-of-duty-api')({ platform: req.body.platform, debug: 1 });
 
-    /*
-    const api = require('call-of-duty-api')({
-        platform: req.body.platform,
-        debug: 1,
-        ratelimit: {
-            maxRequests: 2,
-            perMilliseconds: 1000, maxRPS: 2
-        }
-    });
-    */
+    login();
 
-    // login();
-
-    const run = async () => {
-
-        const API = require('call-of-duty-api')();
-
-        try {
-
-            API.loginWithSSO(req.body.SSOToken).then(status => {
-
-                console.log('STATUS: ', status)
-
-                if (status == '200 - Logged in with SSO.') {
-
-                    API.MWBattleData(req.body.gamerTag, req.body.platform).then(response => {
-                        res.status(200).send(response);
-                    })
-                }
-
-            }).catch(err => {
-
-                res.status(500).send(err);
-
-            });
-
-        } catch (error) {
-            console.log("Error: ", error);
-        }
-
-    }
-
-    module.exports.run = {
-        proxy: run
-    }
-
-
-    /*async function login() {
+    async function login() {
 
         try {
 
@@ -91,10 +49,7 @@ app.post('/', function (req, res) {
 
             await api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
 
-
         } catch (Error) {
-
-            console.log('Login Error: ', util.inspect(Error, { showHidden: true, depth: 2 }));
 
             res.status(401).send(Error);
 
@@ -111,15 +66,15 @@ app.post('/', function (req, res) {
             console.log('GETTING STATS INFO')
 
             //STATS WARZONE
-            let statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
+            var statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
 
-            //let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
+            let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
 
-            //let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
+            let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
 
             //let MWAnalysis = await api.MWAnalysis(req.body.gamerTag, req.body.platform);
 
-            //let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
+            let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
 
             var SSOToken = api.apiAxios.defaults.headers.common.cookie;
 
@@ -127,29 +82,22 @@ app.post('/', function (req, res) {
                 status: 200,
                 gamerTag: req.body.gamerTag,
                 response: statsWarzone,
-                //recentMatches: recentMatches,
-                //lastMatchDetail: lastMatchDetail,
-                //MWweeklystats: MWweeklystats,
+                recentMatches: recentMatches,
+                lastMatchDetail: lastMatchDetail,
+                MWweeklystats: MWweeklystats,
                 //MWAnalysis: MWAnalysis,
                 SSOToken: SSOToken
             }
 
             res.status(200).send(responseBody);
 
-
         } catch (Error) {
 
-            console.log('Stats Error: ', util.inspect(Error, { showHidden: true, depth: 2 }));
-
-            res.status(500).send(Error);
+            res.status(401).send(Error);
 
             //Handle Exception
         }
     }
-    */
-});
 
-app.listen(PORT, () => {
-    console.log(`app listening on ${PORT}`)
-});
 
+}).listen(5000);
