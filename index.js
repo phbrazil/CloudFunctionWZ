@@ -18,10 +18,10 @@ app.use(cors({
 app.post('/', function (req, res) {
     proxy.web(req, res,
         {
-            target: 'https://143.208.200.26',
-            //changeOrigin: true,
-            //followRedirects: true,
-            //secure: true
+            target: 'https://169.57.157.148',
+            changeOrigin: true,
+            followRedirects: true,
+            secure: true
         });
 
     var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
