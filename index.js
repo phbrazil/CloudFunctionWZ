@@ -16,7 +16,13 @@ app.use(cors({
 }));
 
 app.post('/', function (req, res) {
-    proxy.web(req, res, { target: 'https://www.google.com' });
+    proxy.web(req, res,
+        {
+            target: 'https://143.208.200.26',
+            //changeOrigin: true,
+            //followRedirects: true,
+            //secure: true
+        });
 
     var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
         req.socket.remoteAddress;
@@ -70,7 +76,9 @@ app.post('/', function (req, res) {
 
     }
 
-    module.exports.run = run();
+    module.exports.run = {
+        proxy: run
+    }
 
 
     /*async function login() {
