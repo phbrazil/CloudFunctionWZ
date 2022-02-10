@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors');
 const PORT = process.env.PORT || 5000
-var http = require('http');
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer({});
 
@@ -17,16 +16,7 @@ app.use(cors({
 //http.createServer(function(req, res) {
 app.post('/', function (req, res) {
 
-    console.log(req, '++++')
-
     proxy.web(req, res, { target: 'http://143.208.200.26' });
-
-    // proxy.web(req, res, { target: `https://${proxy}` });
-
-    var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
-        req.socket.remoteAddress;
-
-    console.log('Ip Address ', ip)
 
     var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
         req.socket.remoteAddress;
@@ -100,4 +90,6 @@ app.post('/', function (req, res) {
     }
 
 
-}).listen(5000);
+}).listen(PORT, () => {
+    console.log(`app listening on ${PORT}`)
+});
