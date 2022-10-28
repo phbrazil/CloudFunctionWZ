@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "call-of-duty-api": "^2.3.0",
+    "call-of-duty-api": "^3.3.3",
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "http-proxy": "^1.18.1",

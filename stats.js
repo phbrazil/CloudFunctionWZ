@@ -23,14 +23,7 @@ app.post('/', function (req, res) {
     //killall -9 node
 
     //const api = require('call-of-duty-api')({ platform: req.body.platform });
-    const api = require('call-of-duty-api')({
-        platform: req.body.platform,
-        debug: 1,
-        ratelimit: {
-            maxRequests: 2,
-            perMilliseconds: 1000, maxRPS: 2
-        }
-    });
+    const api = require('call-of-duty-api');
 
     login();
 
@@ -40,7 +33,16 @@ app.post('/', function (req, res) {
 
             console.log('GETTING LOGIN INFO')
 
-            await api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
+            const loginStatus = api.login(req.body.SSOToken);
+
+            console.log("login info", login)
+
+            if(loginStatus){
+                start();
+            }else{
+                res.status(404).send("Access denid");         
+            }
+
 
         } catch (Error) {
 
@@ -51,36 +53,14 @@ app.post('/', function (req, res) {
     }
 
 
-    function start() {
+   async function start() {
 
 
         try {
 
             console.log('GETTING STATS INFO')
 
-            var SSOToken = api.apiAxios.defaults.headers.common.cookie;
-
-            
-
-            //STATS WARZONE
-            api.MWBattleData(req.body.gamerTag, req.body.platform).then((output =>{
-
-                const responseBody = {
-                    status: 200,
-                    gamerTag: req.body.gamerTag,
-                    response: output,
-                    //recentMatches: recentMatches,
-                    //lastMatchDetail: lastMatchDetail,
-                    //MWweeklystats: MWweeklystats,
-                    //MWAnalysis: MWAnalysis,
-                    SSOToken: SSOToken
-                }
-
-                res.status(200).send(responseBody);
-
-            }));
-
-            //let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
+            let recentMatches = await api.Warzone.combatHistory(req.body.gamerTag, req.body.platform)
 
             //let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
 
@@ -88,6 +68,22 @@ app.post('/', function (req, res) {
 
             //let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
             
+            //let FullData = await api.fullData(req.body.gamerTag, req.body.platform);
+
+
+            //STATS WARZONE
+            api.Warzone.fullData(req.body.gamerTag, req.body.platform).then((fullData =>{
+
+                const responseBody = {
+                    status: 200,
+                    gamerTag: req.body.gamerTag,
+                    response: fullData,
+                    recentMatches: recentMatches,
+                }
+                res.status(200).send(responseBody);
+            }));
+
+
 
 
         } catch (Error) {
