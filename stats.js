@@ -37,8 +37,6 @@ app.post('/', function (req, res) {
 
             const loginStatus = api.login(req.body.SSOToken);
 
-            console.log("login info", login)
-
             if(loginStatus){
                 start();
             }else{
@@ -64,15 +62,6 @@ app.post('/', function (req, res) {
 
             let recentMatches = await api.Warzone.combatHistory(req.body.gamerTag, req.body.platform)
 
-            //let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
-
-            //let MWAnalysis = await api.MWAnalysis(req.body.gamerTag, req.body.platform);
-
-            //let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
-            
-            //let FullData = await api.fullData(req.body.gamerTag, req.body.platform);
-
-
             //STATS WARZONE
             api.Warzone.fullData(req.body.gamerTag, req.body.platform).then((fullData =>{
 
@@ -84,9 +73,6 @@ app.post('/', function (req, res) {
                 }
                 res.status(200).send(responseBody);
             }));
-
-
-
 
         } catch (Error) {
 
