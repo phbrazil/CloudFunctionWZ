@@ -62,6 +62,10 @@ app.post('/', function (req, res) {
 
             let recentMatches = await api.Warzone.combatHistory(req.body.gamerTag, req.body.platform)
 
+            let lastMatchId = recentMatches.data.matches[0].matchID;
+
+            let lastMatchInfo = await api.Warzone.matchInfo(lastMatchId, req.body.platform)
+
             //STATS WARZONE
             api.Warzone.fullData(req.body.gamerTag, req.body.platform).then((fullData =>{
 
@@ -70,6 +74,7 @@ app.post('/', function (req, res) {
                     gamerTag: req.body.gamerTag,
                     response: fullData,
                     recentMatches: recentMatches,
+                    lastMatchInfo: lastMatchInfo
                 }
                 res.status(200).send(responseBody);
             }));
