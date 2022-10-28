@@ -12,6 +12,9 @@ app.use(cors({
     origin: ['https://www.spartacla.com.br', 'http://localhost:3000']
 }));
 
+
+//https://dashboard.heroku.com/apps/node-warzone-stats/deploy/github
+
 app.post('/', function (req, res) {
 
     var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
@@ -22,7 +25,6 @@ app.post('/', function (req, res) {
     //node index.js
     //killall -9 node
 
-    //const api = require('call-of-duty-api')({ platform: req.body.platform });
     const api = require('call-of-duty-api');
 
     login();
