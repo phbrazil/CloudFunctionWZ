@@ -37,7 +37,13 @@ app.post('/', function (req, res) {
 
             console.log('GETTING LOGIN INFO')
 
-            await api.loginWithSSO(req.body.SSOToken).then(start).catch(console.log);
+            const loginStatus = api.login(req.body.SSOToken);
+
+            if(loginStatus){
+                start();
+            }else{
+                res.status(404).send("Access denid");         
+            }
 
         } catch (Error) {
 
@@ -55,31 +61,19 @@ app.post('/', function (req, res) {
 
             console.log('GETTING STATS INFO')
 
+            let recentMatches = await api.Warzone.combatHistory(req.body.gamerTag, req.body.platform)
+
             //STATS WARZONE
-            var statsWarzone = await api.MWBattleData(req.body.gamerTag, req.body.platform);
+            api.Warzone.fullData(req.body.gamerTag, req.body.platform).then((fullData =>{
 
-            let recentMatches = await api.MWcombatwz(req.body.gamerTag, req.body.platform);
-
-            let lastMatchDetail = await api.MWFullMatchInfowz(recentMatches.matches[0].matchID, req.body.platform);
-
-            //let MWAnalysis = await api.MWAnalysis(req.body.gamerTag, req.body.platform);
-
-            let MWweeklystats = await api.MWweeklystats(req.body.gamerTag, req.body.platform);
-
-            var SSOToken = api.apiAxios.defaults.headers.common.cookie;
-
-            const responseBody = {
-                status: 200,
-                gamerTag: req.body.gamerTag,
-                response: statsWarzone,
-                recentMatches: recentMatches,
-                lastMatchDetail: lastMatchDetail,
-                MWweeklystats: MWweeklystats,
-                //MWAnalysis: MWAnalysis,
-                SSOToken: SSOToken
-            }
-
-            res.status(200).send(responseBody);
+                const responseBody = {
+                    status: 200,
+                    gamerTag: req.body.gamerTag,
+                    response: fullData,
+                    recentMatches: recentMatches,
+                }
+                res.status(200).send(responseBody);
+            }));
 
         } catch (Error) {
 
