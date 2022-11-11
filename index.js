@@ -17,6 +17,11 @@ app.use(cors({
 
 app.post('/', function (req, res) {
 
+    //encoded gamerTag
+    const gamerTag = encodeURIComponent(req.body.gamerTag);
+
+    console.log(gamerTag)
+
     proxy.web(req, res, { target: 'http://143.208.200.26' });
 
     var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
@@ -61,26 +66,31 @@ app.post('/', function (req, res) {
 
             console.log('GETTING STATS INFO')
 
-            let recentMatches = await api.Warzone.combatHistory(req.body.gamerTag, req.body.platform)
+            let recentMatches = await api.Warzone.combatHistory(gamerTag, req.body.platform)
 
             let lastMatchId = recentMatches.data.matches[0].matchID;
 
             let lastMatchInfo = await api.Warzone.matchInfo(lastMatchId, req.body.platform)
 
             //STATS WARZONE
-            api.Warzone.fullData(req.body.gamerTag, req.body.platform).then((fullData =>{
+            api.Warzone.fullData(gamerTag, req.body.platform).then((fullData =>{
 
                 const responseBody = {
                     status: 200,
-                    gamerTag: req.body.gamerTag,
+                    gamerTag: gamerTag,
                     response: fullData,
                     recentMatches: recentMatches,
                     lastMatchInfo: lastMatchInfo
                 }
                 res.status(200).send(responseBody);
-            }));
+            })).catch(err =>{
+                console.log("Error :", err)
+                res.status(401).send(String(err));
+            });
 
         } catch (Error) {
+
+            console.log(Error)
 
             res.status(401).send(Error);
 
