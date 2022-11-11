@@ -19,9 +19,11 @@ app.use(cors({
 app.post('/', function (req, res) {
 
     //encoded gamerTag
-    const gamerTag = utf8Encode(encodeURIComponent(req.body.gamerTag));
+    const gamerTag = req.body.gamerTag;
 
-    console.log(gamerTag)
+    console.log(gamerTag);
+
+    enableDebugMode();
 
     proxy.web(req, res, { target: 'http://143.208.200.26' });
 
@@ -32,10 +34,6 @@ app.post('/', function (req, res) {
 
     //node index.js
     //killall -9 node
-
-    //const api = require('call-of-duty-api');
-
-    enableDebugMode(true);
 
     loginSSO();
 
@@ -72,7 +70,7 @@ app.post('/', function (req, res) {
             Warzone.fullData(gamerTag, req.body.platform).then((fullData =>{
 
                 Warzone.combatHistory(gamerTag, req.body.platform).then(recentMatches =>{
-                    let lastMatchId = recentMatches.data.matches[0].matchID;
+                    const lastMatchId = recentMatches.data.matches[0].matchID;
                     Warzone.matchInfo(lastMatchId, req.body.platform).then(lastMatchInfo =>{
                         const responseBody = {
                             status: 200,
@@ -101,22 +99,6 @@ app.post('/', function (req, res) {
             //Handle Exception
         }
     }
-
-    function utf8Encode(unicodeString) {
-        if (typeof unicodeString != 'string') 
-        throw new TypeError('parameter ‘unicodeString’ is not a string');
-  
-        const utf8String = unicodeString
-        .replace(/[\u0080-\u07ff]/g,(c) => {
-          let cc = c.charCodeAt(0);
-          return String.fromCharCode(0xc0 | cc>>6, 0x80 | cc&0x3f); })
-        .replace(/[\u0800-\uffff]/g,(c) => {
-          let cc = c.charCodeAt(0);
-          return String.fromCharCode(0xe0 | cc>>12, 0x80 | cc>>6&0x3F, 0x80 | cc&0x3f); 
-        });
-        return utf8String;
-    }
-
 
 }).listen(PORT, () => {
     console.log(`app listening on ${PORT}`)
