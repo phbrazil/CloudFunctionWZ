@@ -24,6 +24,8 @@ app.post('/login', function (req, res) {
 
     const api = require('call-of-duty-api');
 
+    //api.enableDebugMode(true);
+
 
     login();
 

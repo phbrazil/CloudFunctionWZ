@@ -1,7 +1,8 @@
-const express = require('express')
-const cors = require('cors');
 const PORT = process.env.PORT || 5000
-var httpProxy = require('http-proxy');
+import { login, enableDebugMode, Warzone } from "call-of-duty-api";
+import express from "express";
+import cors from "cors";
+import httpProxy from "http-proxy";
 var proxy = httpProxy.createProxyServer({});
 
 const app = express()
@@ -32,17 +33,19 @@ app.post('/', function (req, res) {
     //node index.js
     //killall -9 node
 
-    const api = require('call-of-duty-api');
+    //const api = require('call-of-duty-api');
 
-    login();
+    enableDebugMode(true);
 
-    async function login() {
+    loginSSO();
+
+    async function loginSSO() {
 
         try {
 
             console.log('GETTING LOGIN INFO')
 
-            const loginStatus = api.login(req.body.SSOToken);
+            const loginStatus = login(req.body.SSOToken);
 
             if(loginStatus){
                 start();
@@ -61,31 +64,32 @@ app.post('/', function (req, res) {
 
     async function start() {
 
+        console.log('GETTING STATS INFO')
 
         try {
 
-            console.log('GETTING STATS INFO')
-
-            let recentMatches = await api.Warzone.combatHistory(gamerTag, req.body.platform)
-
-            let lastMatchId = recentMatches.data.matches[0].matchID;
-
-            let lastMatchInfo = await api.Warzone.matchInfo(lastMatchId, req.body.platform)
-
             //STATS WARZONE
-            api.Warzone.fullData(gamerTag, req.body.platform).then((fullData =>{
+            Warzone.fullData(gamerTag, req.body.platform).then((fullData =>{
 
-                const responseBody = {
-                    status: 200,
-                    gamerTag: gamerTag,
-                    response: fullData,
-                    recentMatches: recentMatches,
-                    lastMatchInfo: lastMatchInfo
-                }
-                res.status(200).send(responseBody);
+                Warzone.combatHistory(gamerTag, req.body.platform).then(recentMatches =>{
+                    let lastMatchId = recentMatches.data.matches[0].matchID;
+                    Warzone.matchInfo(lastMatchId, req.body.platform).then(lastMatchInfo =>{
+                        const responseBody = {
+                            status: 200,
+                            gamerTag: gamerTag,
+                            response: fullData,
+                            recentMatches: recentMatches,
+                            lastMatchInfo: lastMatchInfo
+                        }
+                        res.status(200).send(responseBody);
+                    }).catch(err =>{
+                        res.status(401).send(String("matchInfo ", err));
+                    });
+                }).catch(err =>{
+                    res.status(401).send(String("combatHistory ", err));
+                });
             })).catch(err =>{
-                console.log("Error :", err)
-                res.status(401).send(String(err));
+                res.status(401).send(String("fullData ", err));
             });
 
         } catch (Error) {
