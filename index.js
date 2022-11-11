@@ -19,7 +19,7 @@ app.use(cors({
 app.post('/', function (req, res) {
 
     //encoded gamerTag
-    const gamerTag = encodeURIComponent(req.body.gamerTag);
+    const gamerTag = utf8Encode(encodeURIComponent(req.body.gamerTag));
 
     console.log(gamerTag)
 
@@ -83,23 +83,38 @@ app.post('/', function (req, res) {
                         }
                         res.status(200).send(responseBody);
                     }).catch(err =>{
-                        res.status(500).send(String("Error: matchInfo ", err));
+                        res.status(500).send("MatchInfo "+ String(err));
                     });
                 }).catch(err =>{
-                    res.status(500).send(String("Error: combatHistory ", err));
+                    res.status(500).send("CombatHistory "+ String(err));
                 });
             })).catch(err =>{
-                res.status(500).send(String("Error: fullData ", err));
+                res.status(500).send("FullData "+ String(err));
             });
 
         } catch (Error) {
 
-            console.log(Error)
+            console.log("Error ",Error)
 
-            res.status(500).send(Error);
+            res.status(500).send(String(Error));
 
             //Handle Exception
         }
+    }
+
+    function utf8Encode(unicodeString) {
+        if (typeof unicodeString != 'string') 
+        throw new TypeError('parameter ‘unicodeString’ is not a string');
+  
+        const utf8String = unicodeString
+        .replace(/[\u0080-\u07ff]/g,(c) => {
+          let cc = c.charCodeAt(0);
+          return String.fromCharCode(0xc0 | cc>>6, 0x80 | cc&0x3f); })
+        .replace(/[\u0800-\uffff]/g,(c) => {
+          let cc = c.charCodeAt(0);
+          return String.fromCharCode(0xe0 | cc>>12, 0x80 | cc>>6&0x3F, 0x80 | cc&0x3f); 
+        });
+        return utf8String;
     }
 
 
