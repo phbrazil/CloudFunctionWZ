@@ -19,7 +19,7 @@ app.use(cors({
 app.post('/', function (req, res) {
 
     //encoded gamerTag
-    const gamerTag = req.body.gamerTag;
+    const gamerTag = decodeURIComponent(req.body.gamerTag);
 
     console.log(gamerTag);
 
