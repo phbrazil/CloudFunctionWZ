@@ -83,20 +83,20 @@ app.post('/', function (req, res) {
                         }
                         res.status(200).send(responseBody);
                     }).catch(err =>{
-                        res.status(401).send(String("matchInfo ", err));
+                        res.status(500).send(String("Error: matchInfo ", err));
                     });
                 }).catch(err =>{
-                    res.status(401).send(String("combatHistory ", err));
+                    res.status(500).send(String("Error: combatHistory ", err));
                 });
             })).catch(err =>{
-                res.status(401).send(String("fullData ", err));
+                res.status(500).send(String("Error: fullData ", err));
             });
 
         } catch (Error) {
 
             console.log(Error)
 
-            res.status(401).send(Error);
+            res.status(500).send(Error);
 
             //Handle Exception
         }
