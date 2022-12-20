@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "call-of-duty-api": "^3.3.3",
+    "call-of-duty-api": "^3.4.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",

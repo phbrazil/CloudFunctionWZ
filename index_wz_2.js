@@ -69,6 +69,7 @@ app.post('/', function (req, res) {
             //STATS WARZONE
             Warzone.fullData(gamerTag, req.body.platform).then((fullData =>{
                 Warzone.combatHistory(gamerTag, req.body.platform).then(recentMatches =>{
+                    console.log('++++++++', recentMatches)
                     const lastMatchId = '';
                     if(Object.keys(recentMatches.data).length != 0){
                         lastMatchId = recentMatches.data.matches[0].matchID;
